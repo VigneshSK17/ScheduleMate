@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">College Scheduler</string>
+    <string name="app_name">Schedule Mate</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Classes</string>
