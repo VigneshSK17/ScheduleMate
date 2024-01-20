@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.zva2340.collegescheduler.fragments.ClassesFragment"
+        android:name="com.zva2340.collegescheduler.fragments.CoursesFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first"/>
+        tools:layout="@layout/fragment_courses"/>
 </navigation>

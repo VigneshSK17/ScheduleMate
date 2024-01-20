@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.zva2340.collegescheduler.databinding.FragmentFirstBinding;
+import com.zva2340.collegescheduler.databinding.FragmentCoursesBinding;
 
-public class ClassesFragment extends Fragment {
+public class CoursesFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentCoursesBinding binding;
 
     @Override
     public View onCreateView(
@@ -20,7 +20,7 @@ public class ClassesFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentCoursesBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }

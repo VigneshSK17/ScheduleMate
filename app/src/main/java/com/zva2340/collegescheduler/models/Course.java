@@ -2,6 +2,8 @@ package com.zva2340.collegescheduler.models;
 
 import com.zva2340.collegescheduler.utils.Weekday;
 
+import java.util.List;
+
 public class Course {
 
     // name, time, instructor
@@ -9,12 +11,12 @@ public class Course {
     // list of exams ?
 
     private String name;
-    private Weekday weekday;
+    private List<Weekday> weekdays;
     private String instructor;
 
-    public Course(String name, Weekday weekday, String instructor) {
+    public Course(String name, List<Weekday> weekdays, String instructor) {
         this.name = name;
-        this.weekday = weekday;
+        this.weekdays = weekdays;
         this.instructor = instructor;
     }
 
@@ -26,12 +28,12 @@ public class Course {
         this.name = name;
     }
 
-    public Weekday getWeekday() {
-        return weekday;
+    public List<Weekday> getWeekday() {
+        return weekdays;
     }
 
-    public void setWeekday(Weekday weekday) {
-        this.weekday = weekday;
+    public void setWeekdays(List<Weekday> weekdays) {
+        this.weekdays = weekdays;
     }
 
     public String getInstructor() {
