@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/coursesFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/coursesFragment"
         android:name="com.zva2340.collegescheduler.fragments.CoursesFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_courses"/>
+        android:label="Courses"
+        tools:layout="@layout/fragment_courses" />
 </navigation>
