@@ -1,24 +1,38 @@
 package com.zva2340.collegescheduler.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import androidx.core.view.WindowCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
+import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.ActivityMainBinding;
+import com.zva2340.collegescheduler.models.Course;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+import com.zva2340.collegescheduler.utils.StartEndTime;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+         NavigationUI.setupActionBarWithNavController(this, navController);
 
         binding.fab.setOnClickListener((view) -> {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -64,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavController navController = Navigation.findNavController(this, R.id.nav_graph);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }
