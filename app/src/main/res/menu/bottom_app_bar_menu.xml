@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_courses"
+        android:id="@+id/coursesFragment"
         android:title="Courses"
         android:icon="@drawable/baseline_book_24"
         />
 
     <item
-        android:id="@+id/action_assignments"
+        android:id="@+id/assignmentsFragment"
         android:title="Assignments"
         android:icon="@drawable/baseline_checklist_24"
         />

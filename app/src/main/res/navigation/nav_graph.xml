@@ -10,4 +10,10 @@
         android:name="com.zva2340.collegescheduler.fragments.CoursesFragment"
         android:label="Courses"
         tools:layout="@layout/fragment_courses" />
+
+    <fragment
+        android:id="@+id/assignmentsFragment"
+        android:name="com.zva2340.collegescheduler.fragments.AssignmentsFragment"
+        android:label="Assignments"
+        tools:layout="@layout/fragment_assignments" />
 </navigation>

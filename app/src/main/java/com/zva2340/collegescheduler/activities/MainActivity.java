@@ -3,6 +3,7 @@ package com.zva2340.collegescheduler.activities;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,9 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_graph);
-//        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-         NavigationUI.setupActionBarWithNavController(this, navController);
+        // TODO: Fix naming of assignment fragment
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
+         NavigationUI.setupWithNavController(navView, navController);
 
         binding.fab.setOnClickListener((view) -> {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
