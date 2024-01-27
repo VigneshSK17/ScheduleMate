@@ -12,8 +12,8 @@
         tools:layout="@layout/fragment_courses" />
 
     <fragment
-        android:id="@+id/assignmentsFragment"
-        android:name="com.zva2340.collegescheduler.fragments.AssignmentsFragment"
-        android:label="Assignments"
-        tools:layout="@layout/fragment_assignments" />
+        android:id="@+id/todosFragment"
+        android:name="com.zva2340.collegescheduler.fragments.TodosFragment"
+        android:label="To-dos"
+        tools:layout="@layout/fragment_todos" />
 </navigation>

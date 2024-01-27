@@ -24,6 +24,7 @@ import com.zva2340.collegescheduler.models.Course;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -47,12 +48,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
-
         // TODO: Fix naming of assignment fragment
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
-         NavigationUI.setupWithNavController(navView, navController);
+        NavigationUI.setupWithNavController(navView, navController);
 
         binding.fab.setOnClickListener((view) -> {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

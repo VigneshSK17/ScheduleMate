@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativelayout_classes"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".fragments.CoursesFragment">
-
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.TodosFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -26,15 +24,10 @@
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 android:minHeight="?attr/actionBarSize"
-                app:title="Courses" />
+                app:title="To-dos" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="?attr/collapsingToolbarLayoutMediumSize"
-        android:id="@+id/recyclerview_classes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </RelativeLayout>

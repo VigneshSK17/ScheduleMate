@@ -7,15 +7,9 @@
         />
 
     <item
-        android:id="@+id/assignmentsFragment"
-        android:title="Assignments"
+        android:id="@+id/todosFragment"
+        android:title="To-dos"
         android:icon="@drawable/baseline_checklist_24"
-        />
-
-    <item
-        android:id="@+id/action_exams"
-        android:title="Exams"
-        android:icon="@drawable/baseline_menu_book_24"
         />
 
 </menu>
