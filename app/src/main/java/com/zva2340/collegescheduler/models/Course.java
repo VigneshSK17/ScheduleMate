@@ -10,7 +10,7 @@ import java.util.List;
  * @author Vignesh Suresh Kumar
  */
 // TODO: Create methods to generate gson for course and convert set of gson to list of courses
-public class Course {
+public class Course implements Comparable<Course>{
 
     // name, time, instructor
     // list of assignments ?
@@ -158,4 +158,13 @@ public class Course {
     }
 
 
+    /**
+     * Compares two courses by name
+     * @param course course to be compared
+     * @return 0 if equal, -1 if less than, 1 if greater than
+     */
+    @Override
+    public int compareTo(Course course) {
+        return name.compareTo(course.getName());
+    }
 }

@@ -90,6 +90,11 @@ public class StartEndTime {
         this.dayOfWeek = dayOfWeek;
     }
 
+    /**
+     * Check if this event is the same as another event
+     * @param obj the other event
+     * @return true if this event is the same as other event, false otherwise
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof StartEndTime)) return false;
