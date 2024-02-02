@@ -13,5 +13,7 @@
         <item>Completion</item>
         <item>Due Date</item>
         <item>Course</item>
+        <item>Assignments</item>
+        <item>Exams</item>
     </string-array>
 </resources>

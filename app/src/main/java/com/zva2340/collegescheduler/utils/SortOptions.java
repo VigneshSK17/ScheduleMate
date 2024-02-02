@@ -6,5 +6,7 @@ package com.zva2340.collegescheduler.utils;
 public enum SortOptions {
     Completion,
     DueDate,
-    Course
+    Course,
+    Assignments,
+    Exams
 }

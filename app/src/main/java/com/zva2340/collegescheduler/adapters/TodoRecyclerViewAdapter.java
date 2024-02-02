@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
 import com.zva2340.collegescheduler.models.TodoItem;
+import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,10 +29,12 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
     private Context context;
     private List<TodoItem> todoItems;
+    private Spinner spinner;
 
-    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems) {
+    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner) {
         this.context = context;
         this.todoItems = todoItems;
+        this.spinner = spinner;
     }
 
 
@@ -38,7 +44,9 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.recyclerview_todo_card, parent, false);
 
-        return new TodoViewHolder(view);
+        TodoViewHolder holder = new TodoViewHolder(view);
+        setupSpinner(holder);
+        return holder;
     }
 
     // TODO: Do checkbox later
@@ -106,12 +114,38 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         );
     }
 
+    private void setupSpinner(TodoViewHolder holder) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                context,
+                android.R.layout.simple_spinner_item,
+                context.getResources().getStringArray(R.array.todos_sort_options)
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            TodoItemSorts todoItemSorts = new TodoItemSorts();
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                todoItemSorts.sortByIndex(i, todoItems);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
 
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private TextView todoTitle, todoDueDate;
         private CheckBox checkboxCompletion;
+        private Spinner sortSpinner;
 
         public TodoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,6 +154,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             todoTitle = itemView.findViewById(R.id.textview_todotitle);
             todoDueDate = itemView.findViewById(R.id.textview_tododuedate);
             checkboxCompletion = itemView.findViewById(R.id.checkbox_completion);
+            sortSpinner = itemView.findViewById(R.id.todosSortSpinner);
 
         }
     }

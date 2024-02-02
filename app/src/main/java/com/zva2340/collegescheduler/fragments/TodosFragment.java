@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.FragmentTodosBinding;
 import com.zva2340.collegescheduler.models.Course;
 import com.zva2340.collegescheduler.models.TodoItem;
+import com.zva2340.collegescheduler.utils.FragmentHelpers;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
@@ -44,6 +46,7 @@ public class TodosFragment extends Fragment {
     List<TodoItem> todoModels;
     SharedPreferences pref;
     Gson gson = new Gson();
+    FragmentHelpers<TodoItem> helpers = new FragmentHelpers<>();
     TodoItemSorts todoItemSorts = new TodoItemSorts();
 
     @Override
@@ -54,7 +57,7 @@ public class TodosFragment extends Fragment {
 
         binding = FragmentTodosBinding.inflate(inflater, container, false);
 
-        pref = getActivity().getApplicationContext().getSharedPreferences("ScheduleMatePref", 0);
+        pref = helpers.setPreferences(getActivity());
         setRecyclerView();
 
         return binding.getRoot();
@@ -63,15 +66,6 @@ public class TodosFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Spinner spinner = binding.todosSortSpinner;
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getActivity(),
-                R.array.todos_sort_options,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 
 
@@ -106,17 +100,14 @@ public class TodosFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerviewTodos;
         setUpTodos();
 
-        TodoRecyclerViewAdapter adapter = new TodoRecyclerViewAdapter(getContext(), todoModels);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-
+        helpers.setUpRecyclerView(recyclerView, getContext(), new TodoRecyclerViewAdapter(getContext(), todoModels, binding.todosSortSpinner));
     }
 
     /**
      * Pulls the courses from shared preferences for local device persistance
      */
     private void setUpTodos() {
-        Set<String> coursesJson = pref.getStringSet("courses", null);
+        Set<String> coursesJson = helpers.getModelsFromPref(pref, "todos");
         todoModels = getCoursesFromGson(coursesJson);
     }
 

@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.FragmentCoursesBinding;
 import com.zva2340.collegescheduler.models.Course;
+import com.zva2340.collegescheduler.utils.FragmentHelpers;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
 import java.time.DayOfWeek;
@@ -33,6 +34,7 @@ public class CoursesFragment extends Fragment {
     List<Course> courseModels;
     SharedPreferences pref;
     Gson gson = new Gson();
+    FragmentHelpers<Course> fragmentHelpers = new FragmentHelpers<>();
 
 
     @Override
@@ -43,7 +45,7 @@ public class CoursesFragment extends Fragment {
 
         binding = FragmentCoursesBinding.inflate(inflater, container, false);
 
-        pref = getActivity().getApplicationContext().getSharedPreferences("ScheduleMatePref", 0);
+        pref = fragmentHelpers.setPreferences(getActivity());
         setRecyclerView();
 
 
@@ -67,7 +69,7 @@ public class CoursesFragment extends Fragment {
      * Pulls the courses from shared preferences for local device persistance
      */
     private void setUpCourses() {
-        Set<String> coursesJson = pref.getStringSet("courses", null);
+        Set<String> coursesJson = fragmentHelpers.getModelsFromPref(pref, "courses");
         courseModels = getCoursesFromGson(coursesJson);
     }
 
@@ -103,10 +105,7 @@ public class CoursesFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerviewClasses;
         setUpCourses();
 
-        CourseRecyclerViewAdapter adapter = new CourseRecyclerViewAdapter(getContext(), courseModels);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-
+        fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), new CourseRecyclerViewAdapter(getContext(), courseModels));
     }
 
 }

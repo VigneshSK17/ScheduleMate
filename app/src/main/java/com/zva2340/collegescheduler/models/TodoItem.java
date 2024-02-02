@@ -65,6 +65,14 @@ public class TodoItem {
         return course.compareTo(todoItem.course);
     }
 
+    public int compareByAssignments(TodoItem todoItem) {
+        return Boolean.compare(!isAssignment, !todoItem.isAssignment);
+    }
+
+    public int compareByExams(TodoItem todoItem) {
+        return Boolean.compare(isAssignment, todoItem.isAssignment);
+    }
+
     /**
      * Checks if the todo item is completed.
      * @return true if the todo item is completed, false otherwise
