@@ -96,6 +96,9 @@ public class CoursesFragment extends Fragment {
         // return coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
     }
 
+    /**
+     * Sets up the recycler view for the courses
+     */
     private void setRecyclerView() {
         RecyclerView recyclerView = binding.recyclerviewClasses;
         setUpCourses();
