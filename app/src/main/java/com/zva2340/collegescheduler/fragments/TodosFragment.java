@@ -22,6 +22,7 @@ import com.zva2340.collegescheduler.databinding.FragmentTodosBinding;
 import com.zva2340.collegescheduler.models.Course;
 import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.StartEndTime;
+import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ public class TodosFragment extends Fragment {
     List<TodoItem> todoModels;
     SharedPreferences pref;
     Gson gson = new Gson();
+    TodoItemSorts todoItemSorts = new TodoItemSorts();
 
     @Override
     public View onCreateView(
@@ -76,6 +78,18 @@ public class TodosFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    // TODO: Save todos to shared preferences
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    // TODO: Save todos to shared preferences
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -128,7 +142,7 @@ public class TodosFragment extends Fragment {
 
         todos.add(new TodoItem(
                 "Hello",
-                false,
+                true,
                 LocalDateTime.now().plusHours(2),
                 course,
                 true
@@ -136,11 +150,13 @@ public class TodosFragment extends Fragment {
 
         todos.add(new TodoItem(
                 "Hi",
-                true,
+                false,
                 LocalDateTime.now().minusHours(2),
                 course,
                 false
         ));
+
+        todoItemSorts.sortByCompletion(todos);
 
         return todos;
 
