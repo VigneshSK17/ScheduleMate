@@ -16,4 +16,9 @@
         <item>Assignments</item>
         <item>Exams</item>
     </string-array>
+
+    <string-array name="edit_todo_types">
+        <item>Assignment</item>
+        <item>Exam</item>
+    </string-array>
 </resources>

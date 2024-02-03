@@ -2,6 +2,7 @@ package com.zva2340.collegescheduler.models;
 
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author Vignesh Suresh Kumar
  */
 // TODO: Create methods to generate gson for course and convert set of gson to list of courses
-public class Course implements Comparable<Course>{
+public class Course implements Comparable<Course>, Serializable {
 
     // name, time, instructor
     // list of assignments ?

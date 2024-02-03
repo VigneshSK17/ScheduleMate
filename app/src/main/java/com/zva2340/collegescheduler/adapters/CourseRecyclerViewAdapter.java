@@ -52,8 +52,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
 
         holder.courseTitle.setText(course.getName());
         holder.courseDates.setText(genCourseDatesStr(course));
-
-        Log.d("ON_BIND_VIEW_HOLDER", holder.courseTitle.getText().toString());
     }
 
     @Override
@@ -86,7 +84,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             courseDates.append(genEventTimeStr(course.getExamTime()));
         }
 
-        Log.d("COURSE_INFO", courseDates.toString());
         return courseDates.toString();
     }
 

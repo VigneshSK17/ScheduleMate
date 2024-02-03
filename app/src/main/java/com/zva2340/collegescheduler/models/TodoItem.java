@@ -1,5 +1,6 @@
 package com.zva2340.collegescheduler.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * Represents a todo item.
  */
-public class TodoItem {
+public class TodoItem implements Serializable  {
 
     /** The title of the todo item */
     private String title;

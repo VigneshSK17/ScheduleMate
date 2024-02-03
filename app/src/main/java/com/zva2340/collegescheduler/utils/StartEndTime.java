@@ -2,6 +2,7 @@ package com.zva2340.collegescheduler.utils;
 
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,7 +11,7 @@ import java.time.LocalTime;
  * Holds an event's start and end time
  * @author Vignesh Suresh Kumar
  */
-public class StartEndTime {
+public class StartEndTime implements Serializable {
 
     /** The start time of the event */
     private LocalTime startTime;

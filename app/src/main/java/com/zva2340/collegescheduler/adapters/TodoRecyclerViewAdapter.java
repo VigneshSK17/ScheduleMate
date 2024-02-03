@@ -1,6 +1,7 @@
 package com.zva2340.collegescheduler.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
+import com.zva2340.collegescheduler.activities.EditTodoActivity;
 import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
@@ -46,7 +48,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         View view = inflater.inflate(R.layout.recyclerview_todo_card, parent, false);
 
         TodoViewHolder holder = new TodoViewHolder(view);
-        setupSpinner(holder);
+        setupSpinner();
         return holder;
     }
 
@@ -65,7 +67,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
         setupCompleted(holder, todo);
 
-        Log.d("ON_BIND_VIEW_HOLDER", holder.todoTitle.getText().toString());
+        holder.cardView.setOnClickListener((view) -> onClick(holder, todo));
     }
 
     @Override
@@ -84,7 +86,6 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         LocalDateTime dueDate = todo.getDueDate();
         String dueDateStr = dueDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
         String todoDesc = String.format("%s | %s", todo.getCourse().getName(), dueDateStr);
-        Log.d("COURSE_INFO", todoDesc);
         return todoDesc;
     }
 
@@ -118,7 +119,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         );
     }
 
-    private void setupSpinner(TodoViewHolder holder) {
+    private void setupSpinner() {
         SortingArrayAdapter adapter = new SortingArrayAdapter(
                 context,
                 android.R.layout.simple_spinner_item,
@@ -141,6 +142,12 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
             }
         });
+    }
+
+    private void onClick(TodoViewHolder holder, TodoItem todo) {
+        Intent intent = new Intent(context, EditTodoActivity.class);
+        intent.putExtra("TODO", todo);
+        context.startActivity(intent);
     }
 
 

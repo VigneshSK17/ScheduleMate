@@ -1,5 +1,6 @@
 package com.zva2340.collegescheduler.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -100,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("FAB_FRAGMENT", "Courses");
             } else if (currentFragment instanceof TodosFragment) {
                 Log.d("FAB_FRAGMENT", "Todos");
+
+                Intent intent = new Intent(this, EditTodoActivity.class);
+                startActivity(intent);
             }
         }
     }
