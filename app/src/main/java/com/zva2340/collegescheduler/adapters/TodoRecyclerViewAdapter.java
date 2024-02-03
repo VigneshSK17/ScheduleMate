@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
@@ -58,6 +59,9 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         holder.todoDueDate.setText(genTodoDescStr(todo));
 
         holder.checkboxCompletion.setOnClickListener(l -> completeTask(holder, position));
+
+        holder.cardView.setCardBackgroundColor(
+                ContextCompat.getColor(context, todo.isAssignment() ? R.color.assignmentColor : R.color.examColor));
 
         setupCompleted(holder, todo);
 
@@ -115,7 +119,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     }
 
     private void setupSpinner(TodoViewHolder holder) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        SortingArrayAdapter adapter = new SortingArrayAdapter(
                 context,
                 android.R.layout.simple_spinner_item,
                 context.getResources().getStringArray(R.array.todos_sort_options)
