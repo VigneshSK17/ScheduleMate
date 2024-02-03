@@ -20,10 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.zva2340.collegescheduler.R;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.ActivityMainBinding;
+import com.zva2340.collegescheduler.fragments.CoursesFragment;
+import com.zva2340.collegescheduler.fragments.TodosFragment;
 import com.zva2340.collegescheduler.models.Course;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.time.DayOfWeek;
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAnchorView(R.id.fab)
                         .setAction("Action", null).show();
+
+                fabFragmentNav();
         });
     }
 
@@ -82,6 +88,20 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_graph);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+
+    private void fabFragmentNav() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+            if (currentFragment instanceof CoursesFragment) {
+                Log.d("FAB_FRAGMENT", "Courses");
+            } else if (currentFragment instanceof TodosFragment) {
+                Log.d("FAB_FRAGMENT", "Todos");
+            }
+        }
     }
 
 }
