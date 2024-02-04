@@ -45,7 +45,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return new CourseViewHolder(view);
     }
 
-    // TODO: Do button later
     @Override
     public void onBindViewHolder(@NonNull CourseRecyclerViewAdapter.CourseViewHolder holder, int position) {
         Course course = courses.get(position);

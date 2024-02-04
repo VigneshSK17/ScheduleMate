@@ -27,6 +27,7 @@ import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.zva2340.collegescheduler.R;
+import com.zva2340.collegescheduler.activities.MainActivity;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
 import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.FragmentTodosBinding;
@@ -56,7 +57,7 @@ public class TodosFragment extends Fragment {
     List<TodoItem> todoModels;
     SharedPreferences pref;
     Gson gson = new Gson();
-    TodoRecyclerViewAdapter adapter;
+    public TodoRecyclerViewAdapter adapter;
     FragmentHelpers<TodoItem> helpers = new FragmentHelpers<>();
     TodoItemSorts todoItemSorts = new TodoItemSorts();
 
@@ -91,14 +92,12 @@ public class TodosFragment extends Fragment {
         super.onResume();
     }
 
-    // TODO: Save todos to shared preferences
     @Override
     public void onPause() {
         saveTodos();
         super.onPause();
     }
 
-    // TODO: Save todos to shared preferences
     @Override
     public void onStop() {
         saveTodos();
@@ -131,7 +130,12 @@ public class TodosFragment extends Fragment {
         });
 
 
-        adapter = new TodoRecyclerViewAdapter(getContext(), todoModels, binding.todosSortSpinner, arl);
+        adapter = new TodoRecyclerViewAdapter(
+                getContext(),
+                todoModels,
+                binding.todosSortSpinner,
+                arl
+        );
         helpers.setUpRecyclerView(recyclerView, getContext(), adapter);
     }
 

@@ -2,23 +2,19 @@ package com.zva2340.collegescheduler.adapters;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -29,7 +25,6 @@ import com.zva2340.collegescheduler.activities.EditTodoActivity;
 import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -39,13 +34,13 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     private List<TodoItem> todoItems;
     private Spinner spinner;
 
-    private ActivityResultLauncher<Intent> launcher;
+    private ActivityResultLauncher<Intent> fragmentLauncher;
 
-    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner, ActivityResultLauncher<Intent> launcher) {
+    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner, ActivityResultLauncher<Intent> fragmentLauncher) {
         this.context = context;
         this.todoItems = todoItems;
         this.spinner = spinner;
-        this.launcher = launcher;
+        this.fragmentLauncher = fragmentLauncher;
     }
 
 
@@ -60,7 +55,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         return holder;
     }
 
-    // TODO: Do checkbox later
+    // TODO: ADD DELETE BUTTON!!!
     @Override
     public void onBindViewHolder(@NonNull TodoRecyclerViewAdapter.TodoViewHolder holder, int position) {
         TodoItem todo = todoItems.get(position);
@@ -158,12 +153,17 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         Intent intent = new Intent(context, EditTodoActivity.class);
         intent.putExtra("TODO", todo);
         intent.putExtra("POSITION", i);
-        launcher.launch(intent);
+        fragmentLauncher.launch(intent);
     }
 
     public void update(TodoItem todo, int position) {
-        todoItems.set(position, todo);
-        notifyItemChanged(position, todo);
+        if (position == -1) {
+            todoItems.add(todo);
+            notifyItemChanged(todoItems.size() - 1, todo);
+        } else {
+            todoItems.set(position, todo);
+            notifyItemChanged(position, todo);
+        }
     }
 
     public static class TodoViewHolder extends RecyclerView.ViewHolder {

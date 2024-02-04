@@ -10,7 +10,6 @@ import java.util.List;
  * Represents a course.
  * @author Vignesh Suresh Kumar
  */
-// TODO: Create methods to generate gson for course and convert set of gson to list of courses
 public class Course implements Comparable<Course>, Serializable {
 
     // name, time, instructor

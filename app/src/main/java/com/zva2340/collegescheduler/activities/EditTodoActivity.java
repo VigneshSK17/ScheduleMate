@@ -79,10 +79,13 @@ public class EditTodoActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (todo == null) {
+                    todo = new TodoItem();
+                }
                 todo.setTitle(binding.editTextTitle.getText().toString());
                 todo.setDueDate(LocalTime.parse(binding.textViewTimeDue.getText().toString(), timeFormatter).atDate(LocalDate.parse(binding.textViewDateDue.getText().toString(), dateFormatter)));
                 todo.setAssignment(binding.spinnerTodoType.getSelectedItemPosition() == 0);
-                // TODO: Set up courses
+                todo.setCourse(courses.get(binding.spinnerTodoCourse.getSelectedItemPosition()));
 
                 Intent resultIntent = new Intent(getBaseContext(), MainActivity.class);
                 resultIntent.putExtra("TODO", todo);
@@ -110,6 +113,7 @@ public class EditTodoActivity extends AppCompatActivity {
 
         binding.spinnerTodoType.setSelection(todo.isAssignment() ? 0 : 1);
         binding.spinnerTodoCourse.setSelection(courses.indexOf(todo.getCourse()));
+
     }
 
     private void setSpinners() {

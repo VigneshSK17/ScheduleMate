@@ -1,5 +1,6 @@
 package com.zva2340.collegescheduler.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.fragment.app.Fragment;
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
+import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.ActivityMainBinding;
 import com.zva2340.collegescheduler.fragments.CoursesFragment;
 import com.zva2340.collegescheduler.fragments.TodosFragment;
@@ -39,12 +43,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
+import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private ActivityResultLauncher<Intent> arlTodo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +60,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // TODO: Fix naming of assignment fragment
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
 
-        binding.fab.setOnClickListener((view) -> {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+        arlTodo = getArlTodo();
 
+        binding.fab.setOnClickListener((view) -> {
                 fabFragmentNav();
         });
     }
@@ -95,17 +99,34 @@ public class MainActivity extends AppCompatActivity {
     private void fabFragmentNav() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
+
+
         if (navHostFragment != null) {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
             if (currentFragment instanceof CoursesFragment) {
                 Log.d("FAB_FRAGMENT", "Courses");
             } else if (currentFragment instanceof TodosFragment) {
                 Log.d("FAB_FRAGMENT", "Todos");
-
                 Intent intent = new Intent(this, EditTodoActivity.class);
-                startActivity(intent);
+                arlTodo.launch(intent);
             }
         }
+
+    }
+
+    public ActivityResultLauncher<Intent> getArlTodo() {
+        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    TodoItem todo = (TodoItem) data.getSerializableExtra("TODO");
+
+                    Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                    TodosFragment currFragment = (TodosFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+                    currFragment.adapter.update(todo, -1);
+                }
+            }
+        });
     }
 
 }

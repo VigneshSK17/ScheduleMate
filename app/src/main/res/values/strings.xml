@@ -6,7 +6,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="todos_sort_options">

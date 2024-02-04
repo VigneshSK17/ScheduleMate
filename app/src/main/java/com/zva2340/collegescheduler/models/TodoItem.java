@@ -40,6 +40,17 @@ public class TodoItem implements Serializable  {
     }
 
     /**
+     * Create a TodoItem with no properties
+     */
+    public TodoItem() {
+        this.title = null;
+        this.isCompleted = false;
+        this.dueDate = null;
+        this.course = null;
+        this.isAssignment = false;
+    }
+
+    /**
      * Compare TodoItems by completion
      * @param todoItem TodoItem to compare to
      * @return 0 if equal, 1 if this is greater, -1 if this is less
