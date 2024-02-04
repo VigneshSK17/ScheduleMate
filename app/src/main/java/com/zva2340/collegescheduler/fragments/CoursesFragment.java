@@ -60,6 +60,18 @@ public class CoursesFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        saveCourses();
+        super.onPause();
+    }
+
+    @Override
+    public void onDetach() {
+        saveCourses();
+        super.onDetach();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
@@ -81,21 +93,8 @@ public class CoursesFragment extends Fragment {
      * @return list of courses
      */
     private List<Course> getCoursesFromGson(Set<String> coursesJson) {
-        // List<Course> courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
-        List<Course> courses = new ArrayList<>();
-
-        List<StartEndTime> courseTimes = new ArrayList<>();
-        courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.MONDAY));
-        courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.WEDNESDAY));
-        courses.add(new Course(
-                "Objects and Design",
-                courseTimes,
-                "Pedro"
-        ));
-
+        List<Course> courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
         return courses;
-
-        // return coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
     }
 
     /**
@@ -106,6 +105,9 @@ public class CoursesFragment extends Fragment {
         setUpCourses();
 
         fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), new CourseRecyclerViewAdapter(getContext(), courseModels));
+    }
+    private void saveCourses() {
+        pref.edit().putStringSet("courses", courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())).apply();
     }
 
 }

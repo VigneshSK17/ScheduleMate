@@ -1,5 +1,8 @@
 package com.zva2340.collegescheduler.adapters;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +17,8 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -34,10 +39,13 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     private List<TodoItem> todoItems;
     private Spinner spinner;
 
-    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner) {
+    private ActivityResultLauncher<Intent> launcher;
+
+    public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner, ActivityResultLauncher<Intent> launcher) {
         this.context = context;
         this.todoItems = todoItems;
         this.spinner = spinner;
+        this.launcher = launcher;
     }
 
 
@@ -67,7 +75,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
         setupCompleted(holder, todo);
 
-        holder.cardView.setOnClickListener((view) -> onClick(holder, todo));
+        holder.cardView.setOnClickListener((view) -> onClick(holder, todo, position));
     }
 
     @Override
@@ -76,16 +84,18 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     }
 
 
-    // TODO: Figure out how to display this
     /**
      * A helper method to generate the string containing todo timings
      * @param  todo the todo item to be used
      * @return string containing todo item due date
      */
     private String genTodoDescStr(TodoItem todo) {
-        LocalDateTime dueDate = todo.getDueDate();
-        String dueDateStr = dueDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
-        String todoDesc = String.format("%s | %s", todo.getCourse().getName(), dueDateStr);
+        String todoDesc = todo.getCourse().getName();
+        Log.d("TODO_RECYCLER_VIEW", todo.getCourse().getName());
+        if (todo.getDueDate() != null) {
+            String dueDateStr = todo.getDueDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
+            todoDesc +=  " | " + dueDateStr;
+        }
         return todoDesc;
     }
 
@@ -144,19 +154,23 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         });
     }
 
-    private void onClick(TodoViewHolder holder, TodoItem todo) {
+    private void onClick(TodoViewHolder holder, TodoItem todo, int i) {
         Intent intent = new Intent(context, EditTodoActivity.class);
         intent.putExtra("TODO", todo);
-        context.startActivity(intent);
+        intent.putExtra("POSITION", i);
+        launcher.launch(intent);
     }
 
+    public void update(TodoItem todo, int position) {
+        todoItems.set(position, todo);
+        notifyItemChanged(position, todo);
+    }
 
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private TextView todoTitle, todoDueDate;
         private CheckBox checkboxCompletion;
-        private Spinner sortSpinner;
 
         public TodoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -165,7 +179,6 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             todoTitle = itemView.findViewById(R.id.textview_todotitle);
             todoDueDate = itemView.findViewById(R.id.textview_tododuedate);
             checkboxCompletion = itemView.findViewById(R.id.checkbox_completion);
-            sortSpinner = itemView.findViewById(R.id.todosSortSpinner);
 
         }
     }

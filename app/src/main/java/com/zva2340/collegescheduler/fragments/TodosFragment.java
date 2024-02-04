@@ -1,14 +1,24 @@
 package com.zva2340.collegescheduler.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +56,7 @@ public class TodosFragment extends Fragment {
     List<TodoItem> todoModels;
     SharedPreferences pref;
     Gson gson = new Gson();
+    TodoRecyclerViewAdapter adapter;
     FragmentHelpers<TodoItem> helpers = new FragmentHelpers<>();
     TodoItemSorts todoItemSorts = new TodoItemSorts();
 
@@ -58,6 +69,8 @@ public class TodosFragment extends Fragment {
         binding = FragmentTodosBinding.inflate(inflater, container, false);
 
         pref = helpers.setPreferences(getActivity());
+
+
         setRecyclerView();
 
         return binding.getRoot();
@@ -68,6 +81,10 @@ public class TodosFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onResume() {
@@ -77,21 +94,23 @@ public class TodosFragment extends Fragment {
     // TODO: Save todos to shared preferences
     @Override
     public void onPause() {
+        saveTodos();
         super.onPause();
     }
 
     // TODO: Save todos to shared preferences
     @Override
     public void onStop() {
+        saveTodos();
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        saveTodos();
         binding = null;
     }
-
 
     /**
      * Sets up the recycler view for the todos
@@ -100,7 +119,20 @@ public class TodosFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerviewTodos;
         setUpTodos();
 
-        helpers.setUpRecyclerView(recyclerView, getContext(), new TodoRecyclerViewAdapter(getContext(), todoModels, binding.todosSortSpinner));
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    TodoItem todo = (TodoItem) data.getSerializableExtra("TODO");
+                    int position = data.getIntExtra("POSITION", -1);
+                    adapter.update(todo, position);
+                }
+            }
+        });
+
+
+        adapter = new TodoRecyclerViewAdapter(getContext(), todoModels, binding.todosSortSpinner, arl);
+        helpers.setUpRecyclerView(recyclerView, getContext(), adapter);
     }
 
     /**
@@ -108,7 +140,7 @@ public class TodosFragment extends Fragment {
      */
     private void setUpTodos() {
         Set<String> coursesJson = helpers.getModelsFromPref(pref, "todos");
-        todoModels = getCoursesFromGson(coursesJson);
+        todoModels = getTodosFromGson(coursesJson);
     }
 
 
@@ -118,39 +150,30 @@ public class TodosFragment extends Fragment {
      * @param todosJson set of courses in JSON format
      * @return list of courses
      */
-    private List<TodoItem> getCoursesFromGson(Set<String> todosJson) {
-        // List<TodoItem> todos = todosJson.stream().map(json -> gson.fromJson(json, TodoItem.class)).collect(Collectors.toList());
-        List<TodoItem> todos = new ArrayList<>();
+    // TODO: Remove all the dummy data fixes
+    private List<TodoItem> getTodosFromGson(Set<String> todosJson) {
+         List<TodoItem> todos = todosJson.stream().map(json -> gson.fromJson(json, TodoItem.class)).collect(Collectors.toList());
 
-        List<StartEndTime> courseTimes = new ArrayList<>();
-        courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.MONDAY));
-        courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.WEDNESDAY));
-        Course course = new Course(
-                "Objects and Design AAAAAAAA",
-                courseTimes,
-                "Pedro"
-        );
+         // TODO: REMOVE THISSS
+         List<StartEndTime> courseTimes = new ArrayList<>();
+         courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.MONDAY));
+         courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.WEDNESDAY));
+         Course course = new Course(
+                 "Objects and Design",
+                 courseTimes,
+                 "Pedro"
+         );
 
-        todos.add(new TodoItem(
-                "Hello",
-                true,
-                LocalDateTime.now().plusHours(2),
-                course,
-                true
-        ));
+         todos.stream().map(todoItem -> {
+             todoItem.setDueDate(LocalDateTime.now());
+             todoItem.setCourse(course);
+             return todoItem;
+         }).collect(Collectors.toList());
+         todoItemSorts.sortByCompletion(todos);
+         return todos;
+    }
 
-        todos.add(new TodoItem(
-                "Hi",
-                false,
-                LocalDateTime.now().minusHours(2),
-                course,
-                false
-        ));
-
-        todoItemSorts.sortByCompletion(todos);
-
-        return todos;
-
-//        todos.stream().map(json -> gson.fromJson(json, TodoItem.class)).collect(Collectors.toList());
+    private void saveTodos() {
+        pref.edit().putStringSet("todos", todoModels.stream().map(todoItem -> gson.toJson(todoItem)).collect(Collectors.toSet())).apply();
     }
 }
