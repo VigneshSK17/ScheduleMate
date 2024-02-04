@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -55,7 +56,6 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         return holder;
     }
 
-    // TODO: ADD DELETE BUTTON!!!
     @Override
     public void onBindViewHolder(@NonNull TodoRecyclerViewAdapter.TodoViewHolder holder, int position) {
         TodoItem todo = todoItems.get(position);
@@ -64,6 +64,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         holder.todoDueDate.setText(genTodoDescStr(todo));
 
         holder.checkboxCompletion.setOnClickListener(l -> completeTask(holder, position));
+        holder.imageButtonDelete.setOnClickListener(l -> delete(position));
 
         holder.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(context, todo.isAssignment() ? R.color.assignmentColor : R.color.examColor));
@@ -132,6 +133,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(0);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             TodoItemSorts todoItemSorts = new TodoItemSorts();
@@ -166,11 +168,17 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         }
     }
 
+    private void delete(int position) {
+        todoItems.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private TextView todoTitle, todoDueDate;
         private CheckBox checkboxCompletion;
+        private ImageButton imageButtonDelete;
 
         public TodoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -179,6 +187,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             todoTitle = itemView.findViewById(R.id.textview_todotitle);
             todoDueDate = itemView.findViewById(R.id.textview_tododuedate);
             checkboxCompletion = itemView.findViewById(R.id.checkbox_completion);
+            imageButtonDelete = itemView.findViewById(R.id.imagebutton_delete);
 
         }
     }

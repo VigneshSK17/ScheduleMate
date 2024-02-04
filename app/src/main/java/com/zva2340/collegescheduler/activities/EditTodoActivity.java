@@ -45,7 +45,8 @@ public class EditTodoActivity extends AppCompatActivity {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, MMMM d yyyy");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
-    private Gson gson = new Gson();
+    private final FragmentHelpers<TodoItem> fragmentHelpers = new FragmentHelpers<>();
+    private Gson gson;
     private List<Course> courses;
 
     @Override
@@ -55,6 +56,8 @@ public class EditTodoActivity extends AppCompatActivity {
 
         binding = ActivityEditTodoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        gson = fragmentHelpers.gsonSetup();
 
         setSupportActionBar(binding.toolbar);
         createMenu();

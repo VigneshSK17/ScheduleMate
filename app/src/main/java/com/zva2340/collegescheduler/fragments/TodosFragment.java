@@ -41,6 +41,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class TodosFragment extends Fragment {
 
     List<TodoItem> todoModels;
     SharedPreferences pref;
-    Gson gson = new Gson();
+    Gson gson;
     public TodoRecyclerViewAdapter adapter;
     FragmentHelpers<TodoItem> helpers = new FragmentHelpers<>();
     TodoItemSorts todoItemSorts = new TodoItemSorts();
@@ -71,6 +72,7 @@ public class TodosFragment extends Fragment {
 
         pref = helpers.setPreferences(getActivity());
 
+        gson = helpers.gsonSetup();
 
         setRecyclerView();
 
@@ -143,8 +145,11 @@ public class TodosFragment extends Fragment {
      * Pulls the courses from shared preferences for local device persistance
      */
     private void setUpTodos() {
-        Set<String> coursesJson = helpers.getModelsFromPref(pref, "todos");
-        todoModels = getTodosFromGson(coursesJson);
+        Set<String> todosJson = helpers.getModelsFromPref(pref, "todos");
+        for (String s : todosJson) {
+            Log.d("TodosFragmentSave", s);
+        }
+        todoModels = getTodosFromGson(todosJson);
     }
 
 
@@ -154,27 +159,14 @@ public class TodosFragment extends Fragment {
      * @param todosJson set of courses in JSON format
      * @return list of courses
      */
-    // TODO: Remove all the dummy data fixes
     private List<TodoItem> getTodosFromGson(Set<String> todosJson) {
-         List<TodoItem> todos = todosJson.stream().map(json -> gson.fromJson(json, TodoItem.class)).collect(Collectors.toList());
+        List<TodoItem> todos = new ArrayList<>();
+        if (!todosJson.isEmpty()) {
+            todos = todosJson.stream().map(json -> gson.fromJson(json, TodoItem.class)).collect(Collectors.toList());
+        }
 
-         // TODO: REMOVE THISSS
-         List<StartEndTime> courseTimes = new ArrayList<>();
-         courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.MONDAY));
-         courseTimes.add(new StartEndTime(LocalTime.now(), LocalTime.now().plusHours(2), DayOfWeek.WEDNESDAY));
-         Course course = new Course(
-                 "Objects and Design",
-                 courseTimes,
-                 "Pedro"
-         );
-
-         todos.stream().map(todoItem -> {
-             todoItem.setDueDate(LocalDateTime.now());
-             todoItem.setCourse(course);
-             return todoItem;
-         }).collect(Collectors.toList());
-         todoItemSorts.sortByCompletion(todos);
-         return todos;
+        todoItemSorts.sortByCompletion(todos);
+        return todos;
     }
 
     private void saveTodos() {

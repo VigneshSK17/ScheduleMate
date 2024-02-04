@@ -33,7 +33,7 @@ public class CoursesFragment extends Fragment {
 
     List<Course> courseModels;
     SharedPreferences pref;
-    Gson gson = new Gson();
+    Gson gson;
     FragmentHelpers<Course> fragmentHelpers = new FragmentHelpers<>();
 
 
@@ -46,6 +46,9 @@ public class CoursesFragment extends Fragment {
         binding = FragmentCoursesBinding.inflate(inflater, container, false);
 
         pref = fragmentHelpers.setPreferences(getActivity());
+
+        gson = fragmentHelpers.gsonSetup();
+
         setRecyclerView();
 
 
@@ -93,7 +96,7 @@ public class CoursesFragment extends Fragment {
      * @return list of courses
      */
     private List<Course> getCoursesFromGson(Set<String> coursesJson) {
-        List<Course> courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
+         List<Course> courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
         return courses;
     }
 
@@ -104,10 +107,16 @@ public class CoursesFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerviewClasses;
         setUpCourses();
 
+        Log.d("CourseRecycler", Integer.toString(courseModels.size()));
+
+
         fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), new CourseRecyclerViewAdapter(getContext(), courseModels));
     }
     private void saveCourses() {
-        pref.edit().putStringSet("courses", courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())).apply();
+        for (String s : courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())) {
+            Log.d("CourseRecycler", s);
+        }
+        pref.edit().putStringSet("courses", courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())).commit();
     }
 
 }

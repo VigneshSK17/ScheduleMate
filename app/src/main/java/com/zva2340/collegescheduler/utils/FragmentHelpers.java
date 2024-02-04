@@ -7,6 +7,23 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.Set;
 
 /**
@@ -47,5 +64,22 @@ public class FragmentHelpers<M> {
         recyclerView.setAdapter(adapter);
     }
 
+    public Gson gsonSetup() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, MMMM d yyyy hh:mm a");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
+            String dateStr = json.getAsJsonPrimitive().getAsString();
+            return LocalDateTime.parse(dateStr, dateTimeFormatter);
+        }).registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (date, typeOfSrc, context) -> {
+                    return new JsonPrimitive(date.format(dateTimeFormatter));
+                }).registerTypeAdapter(LocalTime.class, (JsonSerializer<LocalTime>) (time, typeOfSrc, context) -> {
+                    return new JsonPrimitive(time.format(timeFormatter));
+        }).registerTypeAdapter(LocalTime.class, (JsonDeserializer<LocalTime>) (json, typeOfT, context) -> {
+            String timeStr = json.getAsJsonPrimitive().getAsString();
+            return LocalTime.parse(timeStr, timeFormatter);
+        }).create();
+
+    }
 
 }
