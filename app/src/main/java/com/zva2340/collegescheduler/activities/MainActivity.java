@@ -2,11 +2,9 @@ package com.zva2340.collegescheduler.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,34 +16,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
-import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
-import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.ActivityMainBinding;
 import com.zva2340.collegescheduler.fragments.CoursesFragment;
 import com.zva2340.collegescheduler.fragments.TodosFragment;
-import com.zva2340.collegescheduler.models.Course;
 
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.google.gson.Gson;
+import com.zva2340.collegescheduler.models.Course;
 import com.zva2340.collegescheduler.models.TodoItem;
-import com.zva2340.collegescheduler.utils.StartEndTime;
 
+/**
+ * Main activity for the app, holds the navigation bar and fragments within
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -98,27 +84,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Launches the appropriate edit activity for the current fragment
+     */
     private void fabFragmentNav() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-
-
 
         if (navHostFragment != null) {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
             if (currentFragment instanceof CoursesFragment) {
-                Log.d("FAB_FRAGMENT", "Courses");
                 Intent intent = new Intent(this, EditCourseActivity.class);
                 intent.putExtra("TITLE", "Add");
                 arlCourse.launch(intent);
             } else if (currentFragment instanceof TodosFragment) {
-                Log.d("FAB_FRAGMENT", "Todos");
                 Intent intent = new Intent(this, EditTodoActivity.class);
+                intent.putExtra("TITLE", "Add");
                 arlTodo.launch(intent);
             }
         }
 
     }
 
+    /**
+     * Generates the ActivityResultLauncher for the TodoItem, allowing for the adding of a todo
+     * @return  ActivityResultLauncher for the TodoItem
+     */
     public ActivityResultLauncher<Intent> getArlTodo() {
         return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
@@ -134,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Generates the ActivityResultLauncher for the Course, allowing for the adding of a course
+     * @return  ActivityResultLauncher for the Course
+     */
     public ActivityResultLauncher<Intent> getArlCourse() {
         return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {

@@ -13,26 +13,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
-import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.FragmentCoursesBinding;
 import com.zva2340.collegescheduler.models.Course;
-import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.FragmentHelpers;
-import com.zva2340.collegescheduler.utils.StartEndTime;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Fragment for the courses tab
+ */
 public class CoursesFragment extends Fragment {
 
     private FragmentCoursesBinding binding;
@@ -130,10 +125,11 @@ public class CoursesFragment extends Fragment {
         adapter = new CourseRecyclerViewAdapter(getContext(), courseModels, arl);
         fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), adapter);
     }
+
+    /**
+     * Saves the courses to shared preferences
+     */
     private void saveCourses() {
-        for (String s : courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())) {
-            Log.d("CourseRecycler", s);
-        }
         pref.edit().putStringSet("courses", courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())).commit();
     }
 

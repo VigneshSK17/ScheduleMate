@@ -1,11 +1,9 @@
 package com.zva2340.collegescheduler.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +11,9 @@ import androidx.core.content.ContextCompat;
 
 import com.zva2340.collegescheduler.R;
 
+/**
+ * Adapter for the sorting spinner, allows for color customization for ease of use
+ */
 public class SortingArrayAdapter extends ArrayAdapter<String> {
 
     public SortingArrayAdapter(Context context, int resource, String[] objects) {

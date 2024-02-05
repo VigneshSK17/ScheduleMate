@@ -7,14 +7,11 @@ import androidx.core.view.MenuProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.Gson;
 import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog;
 import com.zva2340.collegescheduler.R;
@@ -27,7 +24,6 @@ import com.zva2340.collegescheduler.utils.StartEndTime;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -36,8 +32,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+/**
+ * Activity for editing a course
+ */
 public class EditCourseActivity extends AppCompatActivity implements RangeTimePickerDialog.ISelectedTime {
 
     private ActivityEditCourseBinding binding;
@@ -70,6 +68,9 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         setUpDateTimePickers();
     }
 
+    /**
+     * Creates the menu for the toolbar, adding the save and quit functionality
+     */
     private void createMenu() {
         addMenuProvider(new MenuProvider() {
             @Override
@@ -134,6 +135,10 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         binding.toolbar.setNavigationOnClickListener((view) -> finish());
     }
 
+    /**
+     * Fills the fields with the course's information when opened for editing
+     * @param extras the intent bundle holding the course info
+     */
     private void fillFields(Bundle extras) {
         course = (Course) extras.get("COURSE");
 
@@ -149,6 +154,11 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         }
     }
 
+    /**
+     * Converts a list of StartEndTimes to a string of days
+     * @param times the list of StartEndTimes
+     * @return      the string of days
+     */
     private String getDaysStr(List<StartEndTime> times) {
         StringBuilder days = new StringBuilder();
         Set<String> daysSet = new HashSet<>();
@@ -165,6 +175,12 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         return days.toString();
     }
 
+    /**
+     * Converts two DayOfWeeks to a string of days
+     * @param day1 the first day
+     * @param day2 the second day
+     * @return     the string of days
+     */
     private String getDaysFromDaysStr(DayOfWeek day1, DayOfWeek day2) {
         String ans = day1.getDisplayName(TextStyle.FULL, Locale.US);
         if (day1 != day2) {
@@ -173,11 +189,19 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         return ans;
     }
 
+    /**
+     * Converts a list of StartEndTimes to a string of times
+     * @param times the list of StartEndTimes
+     * @return      the string of times
+     */
     private String getTimeRangeStr(List<StartEndTime> times) {
         StartEndTime set = times.get(0);
         return set.getStartTime().format(timeFormatter) + " - " + set.getEndTime().format(timeFormatter);
     }
 
+    /**
+     * Sets up the date and time pickers for the course
+     */
     private void setUpDateTimePickers() {
         binding.buttonLectureDays.setOnClickListener(v -> {
             MaterialDatePicker picker = MaterialDatePicker.Builder.dateRangePicker()
@@ -240,6 +264,13 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
         });
     }
 
+    /**
+     * Gathers the selected time from the time picker and sets the text view to the selected time
+     * @param hourStart   the start hour
+     * @param minuteStart the start minute
+     * @param hourEnd     the end hour
+     * @param minuteEnd   the end minute
+     */
     @Override
     public void onSelectedTime(int hourStart, int minuteStart, int hourEnd, int minuteEnd) {
         String startTime = LocalTime.of(hourStart, minuteStart).format(timeFormatter);

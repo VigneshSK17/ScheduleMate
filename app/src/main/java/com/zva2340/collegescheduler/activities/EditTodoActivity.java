@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,13 +28,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+/**
+ * Activity for editing a todo item
+ */
 public class EditTodoActivity extends AppCompatActivity {
 
     private ActivityEditTodoBinding binding;
@@ -59,12 +58,13 @@ public class EditTodoActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         gson = fragmentHelpers.gsonSetup();
+        Intent intent = getIntent();
 
+        binding.toolbar.setTitle(intent.getExtras().getString("TITLE"));
         setSupportActionBar(binding.toolbar);
         createMenu();
 
         setSpinners();
-        Intent intent = getIntent();
         if (intent.hasExtra("TODO")) {
             fillFields(intent.getExtras());
         }
@@ -73,6 +73,9 @@ public class EditTodoActivity extends AppCompatActivity {
         setUpDateTimePickers();
     }
 
+     /**
+     * Creates the menu for the toolbar, adding the save and quit functionality
+     */
     private void createMenu() {
 
         addMenuProvider(new MenuProvider() {
@@ -108,6 +111,10 @@ public class EditTodoActivity extends AppCompatActivity {
         binding.toolbar.setNavigationOnClickListener((view) -> finish());
     }
 
+    /**
+     * Fills the fields with the todo's information when opened for editing
+     * @param extras the intent bundle holding the todo info
+     */
     private void fillFields(Bundle extras) {
         todo = (TodoItem) extras.get("TODO");
 
@@ -120,6 +127,9 @@ public class EditTodoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets the spinners for the todo type and course
+     */
     private void setSpinners() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -143,6 +153,9 @@ public class EditTodoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the date and time pickers for the todo
+     */
     private void setUpDateTimePickers() {
 
         long selection = MaterialDatePicker.todayInUtcMilliseconds();
@@ -162,7 +175,8 @@ public class EditTodoActivity extends AppCompatActivity {
 
             picker.addOnPositiveButtonClickListener((selected) -> {
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMM d yyyy", Locale.US);
-                binding.textViewDateDue.setText(sdf.format(selected));
+                LocalDate date = LocalDate.parse(sdf.format(selected), dateFormatter).plusDays(1);
+                binding.textViewDateDue.setText(date.format(dateFormatter));
             });
         });
 
