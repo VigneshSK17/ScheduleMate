@@ -94,16 +94,19 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
                             DayOfWeek.valueOf(day.toUpperCase())
                     ));
                 }
-                String[] labDays = binding.textViewLabDays.getText().toString().split(", ");
-                String[] labTimes = binding.textViewLabTimes.getText().toString().split(" - ");
-                Set<StartEndTime> labSET = new HashSet<>();
 
-                for (String day1 : labDays) {
-                    labSET.add(new StartEndTime(
-                            LocalTime.parse(labTimes[0], timeFormatter),
-                            LocalTime.parse(labTimes[1], timeFormatter),
-                            DayOfWeek.valueOf(day1.toUpperCase())
-                    ));
+                Set<StartEndTime> labSET = new HashSet<>();
+                if (binding.textViewLabDays.getText().toString().length() > 0) {
+                    String[] labDays = binding.textViewLabDays.getText().toString().split(", ");
+                    String[] labTimes = binding.textViewLabTimes.getText().toString().split(" - ");
+
+                    for (String day1 : labDays) {
+                        labSET.add(new StartEndTime(
+                                LocalTime.parse(labTimes[0], timeFormatter),
+                                LocalTime.parse(labTimes[1], timeFormatter),
+                                DayOfWeek.valueOf(day1.toUpperCase())
+                        ));
+                    }
                 }
 
                 course.setName(binding.editTextName.getText().toString());
@@ -163,7 +166,11 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
     }
 
     private String getDaysFromDaysStr(DayOfWeek day1, DayOfWeek day2) {
-        return day1.getDisplayName(TextStyle.FULL, Locale.US) + ", " + day2.getDisplayName(TextStyle.FULL, Locale.US);
+        String ans = day1.getDisplayName(TextStyle.FULL, Locale.US);
+        if (day1 != day2) {
+            ans += ", " + day2.getDisplayName(TextStyle.FULL, Locale.US);
+        }
+        return ans;
     }
 
     private String getTimeRangeStr(List<StartEndTime> times) {
@@ -182,8 +189,8 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
             // TODO: Fix date issue
             picker.addOnPositiveButtonClickListener(selected -> {
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMM d yyyy", Locale.US);
-                DayOfWeek startDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).first), dateFormatter).getDayOfWeek();
-                DayOfWeek endDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).second), dateFormatter).getDayOfWeek();
+                DayOfWeek startDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).first), dateFormatter).plusDays(1).getDayOfWeek();
+                DayOfWeek endDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).second), dateFormatter).plusDays(1).getDayOfWeek();
                 binding.textViewLectureDays.setText(getDaysFromDaysStr(startDay, endDay));
             });
 
@@ -195,6 +202,10 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
             dialog.newInstance();
             dialog.setRadiusDialog(20);
             dialog.setIs24HourView(false);
+            dialog.setColorBackgroundHeader(R.color.primaryColor);
+            dialog.setColorBackgroundTimePickerHeader(R.color.primaryColor);
+            dialog.setColorTextButton(R.color.examColor);
+            dialog.setColorTabSelected(R.color.black);
             dialog.show(getFragmentManager(), "LECTURE_TIMES_PICKER");
         });
 
@@ -205,11 +216,11 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
 
             picker.show(getSupportFragmentManager(), "LAB_DAYS_PICKER");
 
-            // TODO: Fix date issue
+            // TODO: Check date issue again
             picker.addOnPositiveButtonClickListener(selected -> {
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMM d yyyy", Locale.US);
-                DayOfWeek startDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).first), dateFormatter).getDayOfWeek();
-                DayOfWeek endDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).second), dateFormatter).getDayOfWeek();
+                DayOfWeek startDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).first), dateFormatter).plusDays(1).getDayOfWeek();
+                DayOfWeek endDay = LocalDate.parse(sdf.format(((Pair<Long, Long>) selected).second), dateFormatter).plusDays(1).getDayOfWeek();
                 binding.textViewLabDays.setText(getDaysFromDaysStr(startDay, endDay));
             });
 
@@ -221,6 +232,10 @@ public class EditCourseActivity extends AppCompatActivity implements RangeTimePi
             dialog.newInstance();
             dialog.setRadiusDialog(20);
             dialog.setIs24HourView(false);
+            dialog.setColorBackgroundHeader(R.color.primaryColor);
+            dialog.setColorBackgroundTimePickerHeader(R.color.primaryColor);
+            dialog.setColorTextButton(R.color.examColor);
+            dialog.setColorTabSelected(R.color.black);
             dialog.show(getFragmentManager(), "LAB_TIMES_PICKER");
         });
     }

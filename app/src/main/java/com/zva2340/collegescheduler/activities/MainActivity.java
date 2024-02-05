@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private ActivityResultLauncher<Intent> arlTodo;
+    private ActivityResultLauncher<Intent> arlCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         arlTodo = getArlTodo();
+        arlCourse = getArlCourse();
 
         binding.fab.setOnClickListener((view) -> {
                 fabFragmentNav();
@@ -105,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
             if (currentFragment instanceof CoursesFragment) {
                 Log.d("FAB_FRAGMENT", "Courses");
+                Intent intent = new Intent(this, EditCourseActivity.class);
+                intent.putExtra("TITLE", "Add");
+                arlCourse.launch(intent);
             } else if (currentFragment instanceof TodosFragment) {
                 Log.d("FAB_FRAGMENT", "Todos");
                 Intent intent = new Intent(this, EditTodoActivity.class);
@@ -124,6 +129,21 @@ public class MainActivity extends AppCompatActivity {
                     Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                     TodosFragment currFragment = (TodosFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
                     currFragment.adapter.update(todo, -1);
+                }
+            }
+        });
+    }
+
+    public ActivityResultLauncher<Intent> getArlCourse() {
+        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Course course = (Course) data.getSerializableExtra("COURSE");
+
+                    Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                    CoursesFragment currFragment = (CoursesFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+                    currFragment.adapter.update(course, -1);
                 }
             }
         });

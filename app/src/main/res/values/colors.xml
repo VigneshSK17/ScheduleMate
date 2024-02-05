@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="assignmentColor">#E8DEF8</color>
     <color name="examColor">#D0BCFF</color>
+    <color name="primaryColor">#6200EE</color>
 </resources>
