@@ -1,38 +1,42 @@
 package com.zva2340.collegescheduler.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
-import com.zva2340.collegescheduler.databinding.RecyclerviewCourseCardBinding;
+import com.zva2340.collegescheduler.activities.EditCourseActivity;
+import com.zva2340.collegescheduler.activities.EditTodoActivity;
 import com.zva2340.collegescheduler.models.Course;
+import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
-import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
 
     private Context context;
     private List<Course> courses;
+    private ActivityResultLauncher<Intent> fragmentLauncher;
 
-    public CourseRecyclerViewAdapter(Context context, List<Course> courses) {
+
+    public CourseRecyclerViewAdapter(Context context, List<Course> courses, ActivityResultLauncher<Intent> fragmentLauncher) {
         this.context = context;
         this.courses = courses;
+        this.fragmentLauncher = fragmentLauncher;
     }
 
 
@@ -51,6 +55,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
 
         holder.courseTitle.setText(course.getName());
         holder.courseDates.setText(genCourseDatesStr(course));
+
+        holder.deleteButton.setOnClickListener(l -> delete(position));
+
+        holder.cardView.setOnClickListener(l -> onClick(course, position));
     }
 
     @Override
@@ -71,16 +79,8 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             courseDates.append(genEventTimeStr(course.getLectureTimes()));
         }
         if (course.getLabTimes().size() != 0) {
-            if (course.getLectureTimes().size() != 0) {
-                courseDates.append(" | ");
-            }
+            courseDates.append(" | ");
             courseDates.append(genEventTimeStr(course.getLabTimes()));
-        }
-        if (course.getExamTime() != null) {
-            if (course.getLectureTimes().size() != 0 || course.getLabTimes().size() != 0) {
-                courseDates.append(" | ");
-            }
-            courseDates.append(genEventTimeStr(course.getExamTime()));
         }
 
         return courseDates.toString();
@@ -122,18 +122,43 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return eventDaysStr + " " + eventTime;
     }
 
+    private void delete(int position) {
+        courses.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    private void onClick(Course course, int i) {
+        Intent intent = new Intent(context, EditCourseActivity.class);
+        intent.putExtra("COURSE", course);
+        intent.putExtra("POSITION", i);
+        intent.putExtra("TITLE", "Edit");
+        fragmentLauncher.launch(intent);
+    }
+
+    public void update(Course course, int position) {
+        if (position == -1) {
+            courses.add(course);
+            notifyItemChanged(courses.size() - 1, course);
+        } else {
+            courses.set(position, course);
+            notifyItemChanged(position, course);
+        }
+    }
+
 
     public static class CourseViewHolder extends RecyclerView.ViewHolder {
 
+        private CardView cardView;
         private TextView courseTitle, courseDates;
-        private ImageButton editButton;
+        private ImageButton deleteButton;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            cardView = itemView.findViewById(R.id.cardview_course);
             courseTitle = itemView.findViewById(R.id.textview_coursetitle);
             courseDates = itemView.findViewById(R.id.textview_coursedates);
-            editButton = itemView.findViewById(R.id.imagebutton_edit);
+            deleteButton = itemView.findViewById(R.id.imagebutton_delete_course);
 
         }
     }

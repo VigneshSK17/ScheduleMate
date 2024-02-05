@@ -23,57 +23,42 @@ public class Course implements Comparable<Course>, Serializable {
 
     /** The times this class's lectures meets (can be empty) */
     private List<StartEndTime> labTimes;
-    /** The time this class's exam sessions are (can be empty) */
-    private StartEndTime examTime;
     /** Course instructor name */
     private String instructor;
+    /** The location of the course */
+    private String location;
+    /** The room number of the course */
+    private String room;
+
 
     /**
      * Creates course object with lab times
      * @param name          name of course
      * @param lectureTimes  lectures times for course
      * @param labTimes      lab times for course
-     * @param examTime      exam time for course
      * @param instructor    instructor name
+     * @param location      location of course
+     * @param room          room number of course
      */
-    public Course(String name, List<StartEndTime> lectureTimes, List<StartEndTime> labTimes, StartEndTime examTime, String instructor) {
+    public Course(String name, List<StartEndTime> lectureTimes, List<StartEndTime> labTimes, String instructor, String location, String room) {
         this.name = name;
         this.lectureTimes = lectureTimes;
         this.labTimes = labTimes;
-        this.examTime = examTime;
         this.instructor = instructor;
+        this.location = location;
+        this.room = room;
     }
 
     /**
-     * Creates course object without exam time
-     * @param name          name of course
-     * @param lectureTimes  lecture's times for course
-     * @param labTimes      lab times for course
-     * @param instructor    instructor name
+     *
      */
-    public Course(String name, List<StartEndTime> lectureTimes, List<StartEndTime> labTimes, String instructor) {
-        this(name, lectureTimes, labTimes, null, instructor);
-    }
-
-    /**
-     * Creates course object without lab times
-     * @param name          name of course
-     * @param lectureTimes  lecture's times for course
-     * @param examTime      exam time for course
-     * @param instructor    instructor name
-     */
-    public Course(String name, List<StartEndTime> lectureTimes, StartEndTime examTime, String instructor) {
-        this(name, lectureTimes, null, examTime, instructor);
-    }
-
-    /**
-     * Creates course object without lab and exam times
-     * @param name          name of course
-     * @param lectureTimes  lectures times for course
-     * @param instructor    instructor name
-     */
-    public Course(String name, List<StartEndTime> lectureTimes, String instructor) {
-        this(name, lectureTimes, Collections.emptyList(), null, instructor);
+    public Course() {
+        this.name = null;
+        this.lectureTimes = null;
+        this.labTimes = null;
+        this.instructor = null;
+        this.location = null;
+        this.room = null;
     }
 
     /**
@@ -124,22 +109,6 @@ public class Course implements Comparable<Course>, Serializable {
         this.labTimes = labTimes;
     }
 
-    /**
-     * Get the exam time for the course
-     * @return the exam time
-     */
-    public StartEndTime getExamTime() {
-        return examTime;
-    }
-
-    /**
-     * Set the exam time for course
-     * @param examTime new exam time
-     */
-    public void setExamTime(StartEndTime examTime) {
-        this.examTime = examTime;
-    }
-
 
     /**
      * Get the course instructor's name
@@ -157,6 +126,37 @@ public class Course implements Comparable<Course>, Serializable {
         this.instructor = instructor;
     }
 
+    /**
+     * Get the location of the course
+     * @return location of course
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Set the location of the course
+     * @param location new location of course
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * Get the room number of the course
+     * @return room number of course
+     */
+    public String getRoom() {
+        return room;
+    }
+
+    /**
+     * Set the room number of the course
+     * @param room new room number of course
+     */
+    public void setRoom(String room) {
+        this.room = room;
+    }
 
     /**
      * Compares two courses by name

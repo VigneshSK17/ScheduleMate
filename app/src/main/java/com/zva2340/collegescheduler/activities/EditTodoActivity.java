@@ -45,6 +45,7 @@ public class EditTodoActivity extends AppCompatActivity {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, MMMM d yyyy");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
+
     private final FragmentHelpers<TodoItem> fragmentHelpers = new FragmentHelpers<>();
     private Gson gson;
     private List<Course> courses;

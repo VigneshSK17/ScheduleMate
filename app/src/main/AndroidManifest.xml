@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CollegeScheduler"
         tools:targetApi="31">
         <activity
+            android:name=".activities.EditCourseActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.EditTodoActivity"
             android:exported="false" />
         <activity

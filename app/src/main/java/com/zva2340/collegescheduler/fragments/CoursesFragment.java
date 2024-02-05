@@ -1,5 +1,7 @@
 package com.zva2340.collegescheduler.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.zva2340.collegescheduler.adapters.CourseRecyclerViewAdapter;
+import com.zva2340.collegescheduler.adapters.TodoRecyclerViewAdapter;
 import com.zva2340.collegescheduler.databinding.FragmentCoursesBinding;
 import com.zva2340.collegescheduler.models.Course;
+import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.FragmentHelpers;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
@@ -35,6 +41,7 @@ public class CoursesFragment extends Fragment {
     SharedPreferences pref;
     Gson gson;
     FragmentHelpers<Course> fragmentHelpers = new FragmentHelpers<>();
+    public CourseRecyclerViewAdapter adapter;
 
 
     @Override
@@ -109,8 +116,19 @@ public class CoursesFragment extends Fragment {
 
         Log.d("CourseRecycler", Integer.toString(courseModels.size()));
 
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Course course = (Course) data.getSerializableExtra("COURSE");
+                    int position = data.getIntExtra("POSITION", -1);
+                    adapter.update(course, position);
+                }
+            }
+        });
 
-        fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), new CourseRecyclerViewAdapter(getContext(), courseModels));
+        adapter = new CourseRecyclerViewAdapter(getContext(), courseModels, arl);
+        fragmentHelpers.setUpRecyclerView(recyclerView, getContext(), adapter);
     }
     private void saveCourses() {
         for (String s : courseModels.stream().map(course -> gson.toJson(course)).collect(Collectors.toSet())) {
