@@ -9,7 +9,6 @@ import java.time.LocalTime;
 
 /**
  * Holds an event's start and end time
- * @author Vignesh Suresh Kumar
  */
 public class StartEndTime implements Serializable {
 

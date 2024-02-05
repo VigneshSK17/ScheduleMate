@@ -3,7 +3,6 @@ package com.zva2340.collegescheduler.models;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,10 +10,6 @@ import java.util.List;
  * @author Vignesh Suresh Kumar
  */
 public class Course implements Comparable<Course>, Serializable {
-
-    // name, time, instructor
-    // list of assignments ?
-    // list of exams ?
 
     /** Title name of the course */
     private String name;
@@ -50,7 +45,7 @@ public class Course implements Comparable<Course>, Serializable {
     }
 
     /**
-     *
+     * Creates empty course object which can be filled by EditCourseActivity
      */
     public Course() {
         this.name = null;

@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zva2340.collegescheduler.R;
 import com.zva2340.collegescheduler.activities.EditCourseActivity;
-import com.zva2340.collegescheduler.activities.EditTodoActivity;
 import com.zva2340.collegescheduler.models.Course;
-import com.zva2340.collegescheduler.models.TodoItem;
 import com.zva2340.collegescheduler.utils.StartEndTime;
 
 import java.time.format.DateTimeFormatter;
@@ -26,6 +24,9 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter for the recyclerview in the courses fragment
+ */
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
 
     private Context context;
@@ -33,6 +34,12 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     private ActivityResultLauncher<Intent> fragmentLauncher;
 
 
+    /**
+     * Constructor for the adapter
+     * @param context          the context of the adapter
+     * @param courses          the list of courses to be displayed
+     * @param fragmentLauncher the launcher for the fragment
+     */
     public CourseRecyclerViewAdapter(Context context, List<Course> courses, ActivityResultLauncher<Intent> fragmentLauncher) {
         this.context = context;
         this.courses = courses;
@@ -122,11 +129,20 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return eventDaysStr + " " + eventTime;
     }
 
+    /**
+     * Helper method to delete a course from the recyclerview
+     * @param position the position of the course to be deleted
+     */
     private void delete(int position) {
         courses.remove(position);
         notifyItemRemoved(position);
     }
 
+    /**
+     * Helper method to launch the edit course activity
+     * @param course    the course to be edited
+     * @param i         the position of the course in the recyclerview
+     */
     private void onClick(Course course, int i) {
         Intent intent = new Intent(context, EditCourseActivity.class);
         intent.putExtra("COURSE", course);
@@ -135,6 +151,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         fragmentLauncher.launch(intent);
     }
 
+    /** Helper method to update the recyclerview with a new course
+     * @param course    the course to be updated
+     * @param position  the position of the course in the recyclerview
+     */
     public void update(Course course, int position) {
         if (position == -1) {
             courses.add(course);
@@ -146,6 +166,8 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     }
 
 
+    /** Viewholder for the recyclerview, allows for access to the views in each recyclerview card
+     */
     public static class CourseViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;

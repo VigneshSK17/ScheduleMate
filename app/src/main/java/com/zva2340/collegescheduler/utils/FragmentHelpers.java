@@ -9,21 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
-import java.lang.reflect.Type;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.util.Set;
 
 /**
@@ -33,6 +25,9 @@ import java.util.Set;
  */
 public class FragmentHelpers<M> {
 
+    /**
+     * Empty constructor to simply initialize FragmentHelpers
+     */
     public FragmentHelpers() {}
 
     /**
@@ -64,6 +59,10 @@ public class FragmentHelpers<M> {
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Set up the gson with type adapters for LocalDateTime and LocalTime to allow them to be stored effectively
+     * @return the gson
+     */
     public Gson gsonSetup() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, MMMM d yyyy hh:mm a");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");

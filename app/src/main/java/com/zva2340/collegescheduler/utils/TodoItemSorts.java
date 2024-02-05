@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  * Class to help sort todo items by different criteria
- * @author Vignesh Suresh Kumar
  */
 public class TodoItemSorts {
 

@@ -5,10 +5,6 @@ import java.time.LocalDateTime;
 
 /**
  * Represents a todo item for a course, foundation of assignment and exam
- * @author Vignesh Suresh Kumar
- */
-/**
- * Represents a todo item.
  */
 public class TodoItem implements Serializable  {
 
@@ -77,10 +73,20 @@ public class TodoItem implements Serializable  {
         return course.compareTo(todoItem.course);
     }
 
+    /**
+     * Compare TodoItems by assignments
+     * @param todoItem TodoItem to compare to
+     * @return 0 if equal, 1 if this is greater, -1 if this is less
+     */
     public int compareByAssignments(TodoItem todoItem) {
         return Boolean.compare(!isAssignment, !todoItem.isAssignment);
     }
 
+    /**
+     * Compare TodoItems by exams
+     * @param todoItem TodoItem to compare to
+     * @return 0 if equal, 1 if this is greater, -1 if this is less
+     */
     public int compareByExams(TodoItem todoItem) {
         return Boolean.compare(isAssignment, todoItem.isAssignment);
     }

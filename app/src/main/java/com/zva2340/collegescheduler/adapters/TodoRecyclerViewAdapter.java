@@ -1,7 +1,5 @@
 package com.zva2340.collegescheduler.adapters;
 
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -29,6 +27,9 @@ import com.zva2340.collegescheduler.utils.TodoItemSorts;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Adapter for the recyclerview in the todos fragment
+ */
 public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerViewAdapter.TodoViewHolder> {
 
     private Context context;
@@ -37,6 +38,12 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
     private ActivityResultLauncher<Intent> fragmentLauncher;
 
+    /** Constructor for the adapter
+     * @param context          the context of the adapter
+     * @param todoItems        the list of todos to be displayed
+     * @param spinner          the spinner for sorting
+     * @param fragmentLauncher the launcher for the fragment
+     */
     public TodoRecyclerViewAdapter(Context context, List<TodoItem> todoItems, Spinner spinner, ActivityResultLauncher<Intent> fragmentLauncher) {
         this.context = context;
         this.todoItems = todoItems;
@@ -71,7 +78,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
         setupCompleted(holder, todo);
 
-        holder.cardView.setOnClickListener((view) -> onClick(holder, todo, position));
+        holder.cardView.setOnClickListener((view) -> onClick(todo, position));
     }
 
     @Override
@@ -125,6 +132,9 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         );
     }
 
+    /**
+     * A helper method to set up the spinner for sorting
+     */
     private void setupSpinner() {
         SortingArrayAdapter adapter = new SortingArrayAdapter(
                 context,
@@ -151,13 +161,24 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         });
     }
 
-    private void onClick(TodoViewHolder holder, TodoItem todo, int i) {
+    /**
+    * Helper method to launch the edit todo activity
+    * @param todo    the todo to be edited
+    * @param i       the position of the todo in the recyclerview
+    */
+    private void onClick(TodoItem todo, int i) {
         Intent intent = new Intent(context, EditTodoActivity.class);
         intent.putExtra("TODO", todo);
         intent.putExtra("POSITION", i);
+        intent.putExtra("TITLE", "Edit");
         fragmentLauncher.launch(intent);
     }
 
+    /**
+     * Helper method to update the recyclerview with a new todo
+     * @param todo      the todo to be updated
+     * @param position  the position of the todo in the recyclerview
+     */
     public void update(TodoItem todo, int position) {
         if (position == -1) {
             todoItems.add(todo);
@@ -168,11 +189,17 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         }
     }
 
+    /**
+     * Helper method to delete a todo from the recyclerview
+     * @param position the position of the todo to be deleted
+     */
     private void delete(int position) {
         todoItems.remove(position);
         notifyItemRemoved(position);
     }
 
+    /** Viewholder for the recyclerview, allows for access to the views in each recyclerview card
+     */
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
