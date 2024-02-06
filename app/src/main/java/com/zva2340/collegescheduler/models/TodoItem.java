@@ -61,6 +61,11 @@ public class TodoItem implements Serializable  {
      * @return 0 if equal, 1 if this is greater, -1 if this is less
      */
     public int compareByDueDate(TodoItem todoItem) {
+        if (dueDate == null) {
+            return -1;
+        } else if (todoItem.dueDate == null) {
+            return 1;
+        }
         return dueDate.compareTo(todoItem.dueDate);
     }
 

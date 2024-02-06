@@ -21,6 +21,8 @@ import com.zva2340.collegescheduler.databinding.FragmentCoursesBinding;
 import com.zva2340.collegescheduler.models.Course;
 import com.zva2340.collegescheduler.utils.FragmentHelpers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -87,6 +89,9 @@ public class CoursesFragment extends Fragment {
      */
     private void setUpCourses() {
         Set<String> coursesJson = fragmentHelpers.getModelsFromPref(pref, "courses");
+        if (coursesJson == null) {
+            coursesJson = new HashSet<>();
+        }
         courseModels = getCoursesFromGson(coursesJson);
     }
 
@@ -98,7 +103,10 @@ public class CoursesFragment extends Fragment {
      * @return list of courses
      */
     private List<Course> getCoursesFromGson(Set<String> coursesJson) {
-         List<Course> courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
+        List<Course> courses = new ArrayList<>();
+        if (!coursesJson.isEmpty()) {
+            courses = coursesJson.stream().map(json -> gson.fromJson(json, Course.class)).collect(Collectors.toList());
+        }
         return courses;
     }
 

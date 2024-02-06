@@ -90,9 +90,18 @@ public class EditTodoActivity extends AppCompatActivity {
                     todo = new TodoItem();
                 }
                 todo.setTitle(binding.editTextTitle.getText().toString());
-                todo.setDueDate(LocalTime.parse(binding.textViewTimeDue.getText().toString(), timeFormatter).atDate(LocalDate.parse(binding.textViewDateDue.getText().toString(), dateFormatter)));
                 todo.setAssignment(binding.spinnerTodoType.getSelectedItemPosition() == 0);
                 todo.setCourse(courses.get(binding.spinnerTodoCourse.getSelectedItemPosition()));
+
+                String dueDate = binding.textViewDateDue.getText().toString();
+                String dueTime = binding.textViewTimeDue.getText().toString();
+                if (!dueDate.equals("") && !dueTime.equals("")) {
+                    todo.setDueDate(LocalTime.parse(dueTime, timeFormatter).atDate(LocalDate.parse(dueDate, dateFormatter)));
+                } else if (!dueDate.equals("")) {
+                    todo.setDueDate(LocalDate.parse(dueDate, dateFormatter).atStartOfDay());
+                } else {
+                    todo.setDueDate(null);
+                }
 
                 Intent resultIntent = new Intent(getBaseContext(), MainActivity.class);
                 resultIntent.putExtra("TODO", todo);

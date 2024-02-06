@@ -25,6 +25,7 @@ import com.zva2340.collegescheduler.utils.FragmentHelpers;
 import com.zva2340.collegescheduler.utils.TodoItemSorts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -128,6 +129,9 @@ public class TodosFragment extends Fragment {
      */
     private void setUpTodos() {
         Set<String> todosJson = helpers.getModelsFromPref(pref, "todos");
+        if (todosJson == null) {
+            todosJson = new HashSet<>();
+        }
         for (String s : todosJson) {
             Log.d("TodosFragmentSave", s);
         }
